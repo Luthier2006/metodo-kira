@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090909">
+  <meta name="description" content="Método Kira — diário pessoal de desempenho e padrões comportamentais.">
+  <title>Método Kira | MK-SAP</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Método Kira início">
+      <span class="brand-mark">K</span>
+      <span><strong>MÉTODO KIRA</strong><small>MK-SAP · PAINEL PESSOAL</small></span>
+    </a>
+    <div class="top-actions">
+      <span class="privacy"><i></i> DADOS NO SEU DISPOSITIVO</span>
+      <button class="button button-quiet" id="exportBtn" type="button">Exportar backup</button>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="intro">
+      <div>
+        <p class="eyebrow">OBSERVAÇÃO · ESTATÍSTICA · AUTOCONHECIMENTO</p>
+        <h1>Conheça seus <em>padrões.</em></h1>
+        <p class="intro-copy">Registre o dia, observe tendências e descubra quais condições costumam favorecer seu desempenho.</p>
+      </div>
+      <div class="date-chip"><span>HOJE</span><strong id="todayLabel">—</strong></div>
+    </section>
+
+    <section class="stats-grid" aria-label="Resumo">
+      <article class="stat-card">
+        <span class="stat-label">REGISTROS</span><strong id="totalEntries">0</strong><small>dias acompanhados</small>
+      </article>
+      <article class="stat-card">
+        <span class="stat-label">DESEMPENHO MÉDIO</span><strong id="performanceAverage">—</strong><small>média dos indicadores</small>
+      </article>
+      <article class="stat-card">
+        <span class="stat-label">IMPULSIVIDADE MÉDIA</span><strong id="impulseAverage">—</strong><small>quanto menor, menor a intensidade relatada</small>
+      </article>
+      <article class="stat-card">
+        <span class="stat-label">SEQUÊNCIA ATUAL</span><strong id="streakCount">0</strong><small>dias consecutivos registrados</small>
+      </article>
+    </section>
+
+    <section class="main-grid">
+      <article class="panel entry-panel">
+        <div class="panel-heading">
+          <div><p class="eyebrow">COLETA DIÁRIA</p><h2>Registro do dia</h2></div>
+          <span class="pill" id="entryStatus">NOVO REGISTRO</span>
+        </div>
+        <form id="dailyForm">
+          <div class="field-row">
+            <label for="entryDate">Data</label>
+            <input id="entryDate" name="date" type="date" required>
+          </div>
+          <div class="form-section">
+            <h3><span>01</span> Desempenho</h3>
+            <p class="section-help">Avalie como você se percebeu hoje. Use 0 (muito baixo) a 10 (muito alto).</p>
+            <div id="performanceFields" class="range-list"></div>
+          </div>
+          <div class="form-section">
+            <h3><span>02</span> Comportamento</h3>
+            <p class="section-help">Registre tendências percebidas, sem julgamento.</p>
+            <div id="behaviorFields" class="range-list"></div>
+          </div>
+          <div class="form-section">
+            <h3><span>03</span> Contexto</h3>
+            <div class="context-grid">
+              <label>Horas de sono
+                <input id="sleepHours" type="number" min="0" max="24" step="0.5" placeholder="Ex.: 7,5">
+              </label>
+              <label>Estresse percebido (0–10)
+                <input id="stressLevel" type="number" min="0" max="10" step="1" placeholder="Ex.: 4">
+              </label>
+            </div>
+            <label class="notes-label" for="notes">Observações do dia <span>opcional</span></label>
+            <textarea id="notes" rows="3" maxlength="1000" placeholder="O que pode ter influenciado seu dia? Ex.: dormi melhor, pratiquei violão, tive muitas tarefas..."></textarea>
+          </div>
+          <div class="form-actions">
+            <button class="button button-primary" type="submit">Salvar registro</button>
+            <button class="button button-quiet" id="clearFormBtn" type="button">Limpar</button>
+          </div>
+          <p class="form-message" id="formMessage" role="status" aria-live="polite"></p>
+        </form>
+      </article>
+
+      <aside class="side-column">
+        <article class="panel prediction-panel">
+          <p class="eyebrow">LEITURA ESTATÍSTICA</p>
+          <h2>Tendência de desempenho</h2>
+          <div class="prediction-value" id="predictionValue">—<small>/10</small></div>
+          <p id="predictionText" class="prediction-copy">Registre seus primeiros dias para começar a observar tendências.</p>
+          <div class="prediction-meta"><span>BASE DE CÁLCULO</span><strong id="predictionBasis">Aguardando dados</strong></div>
+          <p class="caution">Estimativa exploratória baseada no seu histórico recente. Não é uma previsão garantida nem uma avaliação clínica.</p>
+        </article>
+
+        <article class="panel chart-panel">
+          <div class="panel-heading compact"><div><p class="eyebrow">ÚLTIMOS 7 REGISTROS</p><h2>Seu ritmo</h2></div></div>
+          <canvas id="trendChart" height="190" aria-label="Gráfico de desempenho e impulsividade" role="img"></canvas>
+          <div class="chart-legend"><span><i class="legend-performance"></i>Desempenho</span><span><i class="legend-impulse"></i>Impulsividade</span></div>
+        </article>
+      </aside>
+    </section>
+
+    <section class="panel history-panel">
+      <div class="panel-heading">
+        <div><p class="eyebrow">ACOMPANHAMENTO</p><h2>Histórico de registros</h2></div>
+        <div class="history-actions">
+          <button class="button button-quiet" id="importBtn" type="button">Importar backup</button>
+          <input id="importFile" type="file" accept="application/json,.json" hidden>
+          <button class="button button-danger-quiet" id="deleteAllBtn" type="button">Apagar histórico</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>DATA</th><th>DESEMPENHO</th><th>IMPULSIVIDADE</th><th>SONO</th><th>OBSERVAÇÕES</th><th></th></tr></thead>
+          <tbody id="historyBody"><tr><td colspan="6" class="empty-state">Nenhum registro ainda. Seu histórico aparecerá aqui.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>MÉTODO KIRA · MK-SAP · VERSÃO 1.0</span>
+      <span>Seus dados permanecem neste navegador até você exportá-los ou apagá-los.</span>
+    </footer>
+  </main>
+  <script src="js/storage.js"></script>
+  <script src="js/statistics.js"></script>
+  <script src="js/predictions.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
